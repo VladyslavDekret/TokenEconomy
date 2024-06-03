@@ -32,26 +32,26 @@ class Investor:
     def sell_tokens(self, liquidity_pool):
         self.months_passed += 1
 
-        self.update_token_holdings()
-
         if self.investors_supply >= self.monthly_get_after_cliff:
-            if self.months_passed <= self.cliff:
-                print("Cliff period for investor: tokens cannot be sold.")
-                return
-
-            amount_to_sell = self.token_holdings * self.monthly_sell_percentage
-            stable_coins_to_receive = amount_to_sell * liquidity_pool.current_price
-
-            print(f"Stable coins to receive: {stable_coins_to_receive}")
-            print(f"Token holdings before sale: {self.token_holdings}")
-
-            if liquidity_pool.update_pool(stable_coins_to_receive, is_addition=False):
-                self.token_holdings -= amount_to_sell
-                self.tokens_sold += amount_to_sell
-
-            print(f"Token holdings after sale: {self.token_holdings}")
-            print(f"Realized profit: {self.realized_profit}")
-
-            self.update_profits(liquidity_pool, amount_to_sell)
+            self.update_token_holdings()
         else:
             print("All tokens from investors supply were given")
+
+        if self.months_passed <= self.cliff:
+            print("Cliff period for investor: tokens cannot be sold.")
+            return
+
+        amount_to_sell = self.token_holdings * self.monthly_sell_percentage
+        stable_coins_to_receive = amount_to_sell * liquidity_pool.current_price
+
+        print(f"Stable coins to receive: {stable_coins_to_receive}")
+        print(f"Token holdings before sale: {self.token_holdings}")
+
+        if liquidity_pool.update_pool(stable_coins_to_receive, is_addition=False):
+            self.token_holdings -= amount_to_sell
+            self.tokens_sold += amount_to_sell
+
+        print(f"Token holdings after sale: {self.token_holdings}")
+        print(f"Realized profit: {self.realized_profit}")
+
+        self.update_profits(liquidity_pool, amount_to_sell)
